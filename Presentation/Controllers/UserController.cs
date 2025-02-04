@@ -2,7 +2,7 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers
+namespace Presentation
 {
     [ApiController]
     [Route("api/[controller]")]
