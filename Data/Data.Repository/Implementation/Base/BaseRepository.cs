@@ -68,5 +68,9 @@ namespace Data
 
         public async Task<bool> Delete(dynamic id)
         => await _repository.Delete(id);
+
+        public void Detach(T entity)
+        => _repository.Detach(entity);
+        
     }
 }

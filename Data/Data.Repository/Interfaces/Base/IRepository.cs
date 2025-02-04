@@ -23,5 +23,6 @@ namespace Data
         (int,IQueryable<T>) WhereAsPaginateQuerie(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1);
         Task<Pagination<T>> WhereAsPaginateListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1);
         IUnitOfWork UnitOfWork { get; set; }
+        void Detach(T entity);
     }
 }

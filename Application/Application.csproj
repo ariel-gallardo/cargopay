@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Domain\Domain.DTOs\Domain.DTOs.csproj" />
     <ProjectReference Include="..\Domain\Domain.Entities\Domain.Entities.csproj" />
     <ProjectReference Include="..\Infraestructure\Infraestructure.Configuration\Infraestructure.Configuration.csproj" />
+    <ProjectReference Include="..\Infraestructure\Infraestructure.Exceptions\Infraestructure.Exceptions.csproj" />
     <ProjectReference Include="..\Infraestructure\Infraestructure.Models\Infraestructure.Models.csproj" />
   </ItemGroup>
 

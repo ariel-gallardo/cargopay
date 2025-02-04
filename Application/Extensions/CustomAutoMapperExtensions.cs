@@ -9,6 +9,7 @@ namespace Application
             services.AddAutoMapper(x =>
             {
                 x.AddProfile<UserProfile>();
+                x.AddProfile<CardProfile>();
             });
             return services;
         }

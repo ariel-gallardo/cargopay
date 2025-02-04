@@ -8,6 +8,7 @@ namespace Application
         {
             services.AddScoped<IPasswordServices, PasswordServices>();
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<ICardServices, CardServices>();
             return services;
         }
     }

@@ -193,5 +193,10 @@ namespace Data
             }
             throw new NotImplementedException("INVALID_TYPEOF_ENTITY_DELETE");
         }
+
+        public void Detach(T entity)
+        {
+            _ctx.Entry(entity).State = EntityState.Detached;
+        }
     }
 }
