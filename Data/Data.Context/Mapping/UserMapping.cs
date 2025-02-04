@@ -14,5 +14,10 @@ namespace Data
             modelBuilder.Entity<T>().Property(x => x.Password).HasColumnName("password").IsRequired().ValueGeneratedNever();
             modelBuilder.Entity<T>().HasIndex(x => x.Email).IsUnique(true);
         }
+
+        public static void MapRelationShips<T>(this ModelBuilder modelBuilder) where T : User
+        {
+            modelBuilder.Entity<T>().HasMany(x => x.Cards).WithOne().HasForeignKey(x => x.UserId);
+        }
     }
 }

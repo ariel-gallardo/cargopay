@@ -21,11 +21,12 @@ namespace Data
         private void MapEntities(ref ModelBuilder mB)
         {
             mB.Map<User>();
+            mB.Map<Card>();
         }
 
         private void MapRelationShips(ref ModelBuilder mB)
         {
-
+            mB.MapRelationShips<User>();
         }
 
         public override int SaveChanges()
