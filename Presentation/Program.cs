@@ -1,3 +1,10 @@
+using Application;
+using Data;
+using Infraestructure;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 namespace Presentation
 {
     public class Program
@@ -5,17 +12,24 @@ namespace Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services
+            .AddHttpContextAccessor()
+            .AddCustomAutoMapper()
+            .AddJwtAuthentication()
+            .AddUnitOfWork()
+            .AddCustomServices()
+            .AddSingleton<AppSettings>()
+            .AddDbContext<CargoPayContext>(o => o.UseSqlServer(AppSettings.Config.ConnectionStrings.MSSQL));
+            builder.Services.AddControllers(o =>
+            {
+                o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+            });
+            builder.Services
+            .AddEndpointsApiExplorer()
+            .AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -23,12 +37,9 @@ namespace Presentation
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }
