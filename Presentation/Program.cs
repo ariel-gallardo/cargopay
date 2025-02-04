@@ -21,7 +21,8 @@ namespace Presentation
             .AddUnitOfWork()
             .AddCustomServices()
             .AddSingleton<AppSettings>()
-            .AddDbContext<CargoPayContext>(o => o.UseSqlServer(AppSettings.Config.ConnectionStrings.MSSQL));
+            .AddDbContext<CargoPayContext>(o => o.UseSqlServer(AppSettings.Config.ConnectionStrings.MSSQL))
+            .AddPaymentFeeModule();
             builder.Services.AddControllers(o =>
             {
                 o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
