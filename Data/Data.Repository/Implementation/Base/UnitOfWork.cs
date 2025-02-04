@@ -122,6 +122,5 @@ namespace Data
         public void SaveChanges() => _ctx.SaveChanges();
 
         public async Task SaveChangesAsync() => await _ctx.SaveChangesAsync();
-        
     }
 }

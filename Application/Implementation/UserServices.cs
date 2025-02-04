@@ -24,6 +24,19 @@ namespace Application
         }
 
         public IEnumerable<Claim> CurrentUserClaims { get => _httpContext?.HttpContext?.User?.Claims ?? new Claim[] {}; }
+
+        public User CurrentUser { get
+            {
+                User result = null;
+                if(CurrentUserClaims.Count() > 0)
+                {
+                    var cId = long.Parse(CurrentUserClaims.First(x => ClaimTypes.Sid == x.Type).Value);
+                    result = _repository.Where(x => x.Id == cId).Include(x => x.Cards).First();
+                }
+                return result;
+            }
+        }
+
         public async Task<CustomResponse> LoginUser(UserLoginDTO user)
         {
             var result = new CustomResponse();

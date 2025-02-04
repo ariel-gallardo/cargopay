@@ -5,6 +5,7 @@ namespace Data
     public interface IUnitOfWork : IDisposable
     {
         IUserRepository User { get; }
+        ICardRepository Card { get; }
         void BeginTransaction();
         Task BeginTransactionAsync();
         void CommitTransaction();

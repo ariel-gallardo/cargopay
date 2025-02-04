@@ -10,5 +10,6 @@ namespace Application
         Task<CustomResponse> LoginUser(UserLoginDTO user);
         Task<CustomResponse> RegisterUser(UserRegisterDTO user);
         IEnumerable<Claim> CurrentUserClaims { get; }
+        User CurrentUser { get; }
     }
 }

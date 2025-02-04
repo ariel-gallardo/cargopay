@@ -4,6 +4,7 @@ using Data;
 using Domain;
 using Infraestructure;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application
 {
@@ -13,9 +14,9 @@ namespace Application
         private readonly IMapper _mapper;
         private readonly IUserServices _userServices;
 
-        public CardServices(ICardRepository cardRepository, IMapper mapper, IUserServices userServices)
+        public CardServices(IUnitOfWork unitOfWork, IMapper mapper, IUserServices userServices)
         {
-            _repository = cardRepository;
+            _repository = unitOfWork.Card;
             _mapper = mapper;
             _userServices = userServices;
         }
@@ -34,12 +35,60 @@ namespace Application
 
         public async Task<CustomResponse> PayUsingCard(CardPayDTO dto)
         {
-            throw new NotImplementedException();
+            var result = new CustomResponse();
+            if(_userServices.CurrentUser.Cards.Any(x => x.Id == dto.CardId))
+            {
+                var cardDb = await _repository.Where(x => x.Id == dto.CardId).FirstAsync();
+                try
+                {
+                    var opMap = _mapper.Map<CardPayDTO, Card>(dto,cardDb);
+                    if (opMap.Balance < 0 || dto.Amount == 0) throw new SubtractionException("PAY_AMOUNT", dto.Amount * -1 + cardDb.Balance);
+                    else if(dto.Amount != 0)
+                    {
+                        cardDb.Balance = opMap.Balance;
+                        await _repository.Update(cardDb);
+                        result.Data = _mapper.Map<Card, CardInfoDTO>(opMap);
+                        result.Message = Messages.Updated(Entities.Card, dto.CardId);
+                        result.StatusCode = StatusCodes.Status200OK;
+                    }
+                    else
+                    {
+                        result.Data = _mapper.Map<Card, CardInfoDTO>(opMap);
+                        result.Message = Messages.NotUpdated(Entities.Card, dto.CardId);
+                        result.StatusCode = StatusCodes.Status400BadRequest;
+                    }
+
+                }
+                catch (SubtractionException sE)
+                {
+                    result.Data = cardDb;
+                    result.Message = sE.Message;
+                    result.StatusCode = StatusCodes.Status400BadRequest;
+                }
+            }
+            else
+            {
+                result.Message = Messages.NotAssociated(Entities.Card, dto.CardId);
+                result.StatusCode = StatusCodes.Status400BadRequest;
+            }
+            return result;
         }
 
         public async Task<CustomResponse> Info(string cardId)
         {
-            throw new NotImplementedException();
+            var result = new CustomResponse();
+            if (_userServices.CurrentUser.Cards.Any(x => x.Id == cardId))
+            {
+                result.Data = _mapper.Map<Card,CardInfoDTO>(_userServices.CurrentUser.Cards.First(x => x.Id == cardId));
+                result.Message = Messages.Exists(Entities.Card, cardId);
+                result.StatusCode = StatusCodes.Status200OK;
+            }
+            else
+            {
+                result.StatusCode = StatusCodes.Status403Forbidden;
+                result.Message = Messages.NotAssociated(Entities.Card, cardId);
+            }
+            return result;
         }
     }
 }

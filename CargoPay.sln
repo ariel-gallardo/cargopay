@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Extensions", "Data\Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infraestructure.Models", "Infraestructure\Infraestructure.Models\Infraestructure.Models.csproj", "{2B5DAA69-DAC2-4CF1-B2F1-5E882BD52E3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infraestructure.Exceptions", "Infraestructure\Infraestructure.Exceptions\Infraestructure.Exceptions.csproj", "{81B73FE0-D3DC-45FE-84D0-3105C02CB082}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{2B5DAA69-DAC2-4CF1-B2F1-5E882BD52E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B5DAA69-DAC2-4CF1-B2F1-5E882BD52E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B5DAA69-DAC2-4CF1-B2F1-5E882BD52E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81B73FE0-D3DC-45FE-84D0-3105C02CB082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81B73FE0-D3DC-45FE-84D0-3105C02CB082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81B73FE0-D3DC-45FE-84D0-3105C02CB082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81B73FE0-D3DC-45FE-84D0-3105C02CB082}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,5 +94,6 @@ Global
 		{F0543F66-4FBF-40E8-9FAB-EEEAE5F549CE} = {FD9FA6DD-1A35-4813-A4B1-C1CC9CD0658C}
 		{D762521E-6181-4313-AD52-7F03D924C1A5} = {FD9FA6DD-1A35-4813-A4B1-C1CC9CD0658C}
 		{2B5DAA69-DAC2-4CF1-B2F1-5E882BD52E3A} = {4F21642A-ADA8-444D-B682-ACDE019055AC}
+		{81B73FE0-D3DC-45FE-84D0-3105C02CB082} = {4F21642A-ADA8-444D-B682-ACDE019055AC}
 	EndGlobalSection
 EndGlobal
