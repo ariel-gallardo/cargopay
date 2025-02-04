@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class CardController : ControllerBase
     {
         private readonly ICardServices _services;
