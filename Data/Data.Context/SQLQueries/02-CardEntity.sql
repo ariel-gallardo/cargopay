@@ -1,7 +1,7 @@
 
 CREATE TABLE cards (
 	id char(15) PRIMARY KEY,
-	balance decimal(10,2),
+	balance decimal(10,2) NOT NULL,
 	created_at datetime NOT NULL,
 	updated_at datetime NULL,
 	deleted_at datetime NULL,
