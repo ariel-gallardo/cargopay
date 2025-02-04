@@ -1,19 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application;
+using Domain;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Presentation.Controllers
+namespace Presentation
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult Login()
+        private readonly IUserServices _services;
+
+        public UserController(IUserServices services)
         {
-            return View();
+            _services = services;
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginDTO dto)
+        {
+            var info = await _services.LoginUser(dto);
+            return StatusCode(info.StatusCode, info);
         }
 
-        [HttpPost]
-        public IActionResult Register()
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] UserRegisterDTO dto)
         {
-            return View();
+            var info = await _services.RegisterUser(dto);
+            return StatusCode(info.StatusCode, info);
         }
     }
 }
