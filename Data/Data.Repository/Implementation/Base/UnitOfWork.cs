@@ -1,6 +1,4 @@
-﻿using Domain;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Data
 {
@@ -9,20 +7,24 @@ namespace Data
         #region Private
         private readonly CargoPayContext _ctx;
         private readonly IUserRepository _userRepository;
+        private readonly ICardRepository _cardRepository;
         #endregion
 
         #region Public
         public IUserRepository User { get => _userRepository; }
+        public ICardRepository Card { get => _cardRepository; }
         public CargoPayContext Context { get => _ctx; }
         #endregion
 
         #region Constructor
         public UnitOfWork(
             CargoPayContext ctx,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            ICardRepository cardRepository
             )
         {
             _userRepository = userRepository;
+            _cardRepository = cardRepository;
             _ctx = ctx;
             AssignUnitOfWork();
         }
@@ -36,6 +38,7 @@ namespace Data
         private void AssignUnitOfWork()
         {
             _userRepository.UnitOfWork = this;
+            _cardRepository.UnitOfWork = this;
         }
 
         private IDbContextTransaction _transaction;
