@@ -39,4 +39,10 @@ so we can make our Authorization system secure.
 data in the memory. In case you are using a database to persist the cards and
 transactions improve the database design and the usage of the ORM framework.
 
-How to submit a solution: Provide a downloadable link of the solution.
+How to submit a solution: [Provide a downloadable link of the solution](https://github.com/ariel-gallardo/cargopay/archive/refs/heads/main.zip).
+
+[DB Backup Link](https://drive.google.com/file/d/1bH4nVMRTu5zs2hAUe8B82O42-1awTTe0/view?usp=sharing)
+
+User Test
+test@mail.com
+123456
