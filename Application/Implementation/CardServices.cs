@@ -13,12 +13,14 @@ namespace Application
         private readonly ICardRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUserServices _userServices;
+        private readonly IPaymentFeesServices _pFServices;
 
-        public CardServices(IUnitOfWork unitOfWork, IMapper mapper, IUserServices userServices)
+        public CardServices(IUnitOfWork unitOfWork, IMapper mapper, IUserServices userServices, IPaymentFeesServices pFServices)
         {
             _repository = unitOfWork.Card;
             _mapper = mapper;
             _userServices = userServices;
+            _pFServices = pFServices;
         }
         public async Task<CustomResponse> CreateCard(CardCreateDTO dto)
         {
@@ -45,7 +47,8 @@ namespace Application
                     if (opMap.Balance < 0 || dto.Amount == 0) throw new SubtractionException("PAY_AMOUNT", dto.Amount * -1 + cardDb.Balance);
                     else if(dto.Amount != 0)
                     {
-                        cardDb.Balance = opMap.Balance;
+                        var ufe = _pFServices.CurrentUFE;
+                        cardDb.Balance = opMap.Balance - (ufe * dto.Amount);
                         await _repository.Update(cardDb);
                         result.Data = _mapper.Map<Card, CardInfoDTO>(opMap);
                         result.Message = Messages.Updated(Entities.Card, dto.CardId);

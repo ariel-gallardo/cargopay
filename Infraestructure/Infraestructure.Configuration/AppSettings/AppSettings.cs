@@ -40,6 +40,7 @@ namespace Infraestructure
         }
         public JwtEntity JWT { get; set; }
         public ConnectionStringsEntity ConnectionStrings { get; set; }
+        public PaymentFeeEntity PaymentFee { get; set; }
         public int Take { get; set; }
     }
 }
