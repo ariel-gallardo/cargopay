@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Data;
 using Domain;
 using Infraestructure;
@@ -21,6 +22,8 @@ namespace Application
             _mapper = mapper;
             _httpContext = httpContext;
         }
+
+        public IEnumerable<Claim> CurrentUserClaims { get => _httpContext?.HttpContext?.User?.Claims ?? new Claim[] {}; }
         public async Task<CustomResponse> LoginUser(UserLoginDTO user)
         {
             var result = new CustomResponse();
