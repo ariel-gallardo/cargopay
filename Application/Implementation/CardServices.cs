@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using AutoMapper;
+using Data;
 using Domain;
 
 namespace Application
@@ -6,10 +7,12 @@ namespace Application
     public class CardServices : ICardServices
     {
         private readonly ICardRepository _repository;
+        private readonly IMapper _mapper;
 
-        public CardServices(ICardRepository cardRepository)
+        public CardServices(ICardRepository cardRepository, IMapper mapper)
         {
             _repository = cardRepository;
+            _mapper = mapper;
         }
         public async Task<CustomResponse> CreateCard(CardCreateDTO dto)
         {
