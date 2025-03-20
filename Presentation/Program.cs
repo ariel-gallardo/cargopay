@@ -14,14 +14,18 @@ namespace Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services
+            var services = builder.Services
             .AddHttpContextAccessor()
             .AddCustomAutoMapper()
             .AddJwtAuthentication()
             .AddUnitOfWork()
             .AddCustomServices()
-            .AddSingleton<AppSettings>()
-            .AddDbContext<CargoPayContext>(o => o.UseNpgsql(AppSettings.Config.ConnectionStrings.PostgreSQL))
+            .AddSingleton<AppSettings>();
+
+            var serviceProvider = builder.Services.BuildServiceProvider();
+            var appSettings = serviceProvider.GetRequiredService<AppSettings>();
+            AppSettings.Set(appSettings);
+            services.AddDbContext<CargoPayContext>(o => o.UseNpgsql(builder.Configuration["AZURE_POSTGRESQL_CONNECTIONSTRING"]))
             .AddPaymentFeeModule();
             builder.Services.AddControllers(o =>
             {
