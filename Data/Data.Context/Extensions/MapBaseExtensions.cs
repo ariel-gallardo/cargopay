@@ -8,7 +8,7 @@ namespace Data
         internal static ModelBuilder MapBaseString<T>(this ModelBuilder modelBuilder) where T : StringEntity
         {
             modelBuilder.Entity<T>().HasKey(x => x.Id);
-            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("GETUTCDATE()");
+            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now() AT TIME ZONE 'UTC'");
             modelBuilder.Entity<T>().Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
             modelBuilder.Entity<T>().Property(x => x.DeletedAt).HasColumnName("deleted_at").IsRequired(false);
             modelBuilder.Entity<T>().HasIndex(x => x.CreatedAt);
@@ -20,8 +20,8 @@ namespace Data
         internal static ModelBuilder MapBaseGuid<T>(this ModelBuilder modelBuilder) where T : GuidEntity 
         {
             modelBuilder.Entity<T>().HasKey(x => x.Id);
-            modelBuilder.Entity<T>().Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("GETUTCDATE()");
+            modelBuilder.Entity<T>().Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now() AT TIME ZONE 'UTC'");
             modelBuilder.Entity<T>().Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
             modelBuilder.Entity<T>().Property(x => x.DeletedAt).HasColumnName("deleted_at").IsRequired(false);
             modelBuilder.Entity<T>().HasIndex(x => x.CreatedAt);
@@ -35,7 +35,7 @@ namespace Data
         {
             modelBuilder.Entity<T>().HasKey(x => x.Id);
             modelBuilder.Entity<T>().Property(x => x.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("GETUTCDATE()");
+            modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("now() AT TIME ZONE 'UTC'");
             modelBuilder.Entity<T>().Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
             modelBuilder.Entity<T>().Property(x => x.DeletedAt).HasColumnName("deleted_at").IsRequired(false);
             modelBuilder.Entity<T>().HasIndex(x => x.CreatedAt);

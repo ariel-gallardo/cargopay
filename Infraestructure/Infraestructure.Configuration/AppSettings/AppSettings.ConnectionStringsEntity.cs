@@ -4,7 +4,7 @@
     {
         public class ConnectionStringsEntity
         {
-            public string MSSQL { get; set; }
+            public string PostgreSQL { get; set; }
         }
     }
 }

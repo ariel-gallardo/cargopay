@@ -86,12 +86,6 @@ namespace Application
                     result.Message = Messages.Created(Entities.User, user.UserEmail);
                     result.StatusCode = StatusCodes.Status200OK;
                 }
-                else
-                {
-                    result.Message = Messages.NotFound(Entities.User, user.UserEmail);
-                    result.StatusCode = StatusCodes.Status404NotFound;
-                }
-
             }
             else
             {

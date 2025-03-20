@@ -21,7 +21,7 @@ namespace Presentation
             .AddUnitOfWork()
             .AddCustomServices()
             .AddSingleton<AppSettings>()
-            .AddDbContext<CargoPayContext>(o => o.UseSqlServer(AppSettings.Config.ConnectionStrings.MSSQL))
+            .AddDbContext<CargoPayContext>(o => o.UseNpgsql(AppSettings.Config.ConnectionStrings.PostgreSQL))
             .AddPaymentFeeModule();
             builder.Services.AddControllers(o =>
             {
@@ -57,16 +57,13 @@ namespace Presentation
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var ctrlOutput = Path.Combine(AppContext.BaseDirectory, xmlFilename);
                 o.IncludeXmlComments(ctrlOutput, true);
+                o.EnableAnnotations();
             });
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
