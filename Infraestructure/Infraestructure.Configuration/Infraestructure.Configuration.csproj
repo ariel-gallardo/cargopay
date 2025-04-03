@@ -15,12 +15,6 @@
     <NoWarn>1701;1702;CS0119</NoWarn>
   </PropertyGroup>
 	<ItemGroup>
-		<None Include="..\..\Presentation\appsettings.json">
-			<Link>appsettings.json</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
 	</ItemGroup>

@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/docker-compose.yml
+**/README.md
+**/CargoPay.sln
+**/.git
+**/.vscode
+**/.github
+**/.containers
+**/Dockerfile
+**/.csproj.user

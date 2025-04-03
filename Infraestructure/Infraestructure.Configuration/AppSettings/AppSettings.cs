@@ -5,19 +5,13 @@ namespace Infraestructure
 {
     public partial class AppSettings
     {
-        public AppSettings(IConfiguration cfg)
+        public AppSettings()
         {
-            _cfg = cfg;
-            cfg.Bind(this);
-            _instance = this;
+            
         }
-        private static string _jsonFileString;
         private static AppSettings _instance;
-        private static IConfiguration _cfg;
-
-        public static void Set(AppSettings cfg)
-        {
-            _instance = cfg;
+        public void Set(AppSettings s){
+            _instance = s;
         }
 
         public static AppSettings Config

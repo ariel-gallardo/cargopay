@@ -18,7 +18,9 @@ namespace Application
 
             CreateMap<User, UserInfoDTO>()
                 .ForMember(y => y.Email, xx => xx.MapFrom(x => x.Email))
-                .ForMember(y => y.Name, xx => xx.MapFrom(x => x.Name));
+                .ForMember(y => y.Name, xx => xx.MapFrom(x => x.Name))
+                .ForMember(y => y.Id, xx => xx.MapFrom(x => x.Id))
+                .ForMember(y => y.Image, xx => xx.MapFrom(x => $"/{x.Id}"));
         }
     }
 }

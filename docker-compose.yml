@@ -1,0 +1,39 @@
+services:
+  cargopay.api:
+    container_name: cargopay-api
+    image: cargopay-api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CERT_PASSWORD_ARG=1234
+        - BUILD_CONFIGURATION=Debug
+    ports:
+      - "1000:443"
+    environment:
+      AZURE_POSTGRESQL_CONNECTIONSTRING: "Host=cargopay.database;Username=cargopay-user;Password=cargopay-pass;Database=cargopay-db;Port=5432;"
+      AppSettings__Take: 10
+      AppSettings__PaymentFee__MinValue: 0
+      AppSettings__PaymentFee__MaxValue: 2
+      AppSettings__PaymentFee__SleepTime: "5m"
+      AppSettings__JWT__Issuer: ""
+      AppSettings__JWT__Audience: ""
+      AppSettings__JWT__SecretKey: "2d89b64214def8ff6cff8c076646a4c1"
+      AppSettings__JWT__ValidateIssuer: false
+      AppSettings__JWT__ValidateAudience: false
+      AppSettings__JWT__ValidateLifetime: true
+      AppSettings__JWT__HourExpirationTime: 1
+      AllowedHosts: "*"
+      Logging__LogLevel__Default: "Information"
+      Logging__LogLevel__Microsoft_AspNetCore: "Warning"
+  cargopay.database:
+    image: postgres:latest
+    container_name: cargopay-db
+    environment:
+      POSTGRES_DB: cargopay-db
+      POSTGRES_USER: cargopay-user
+      POSTGRES_PASSWORD: cargopay-pass
+    volumes:
+      - ./.containers/cargopay-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432  
