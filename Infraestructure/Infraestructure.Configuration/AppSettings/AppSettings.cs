@@ -26,7 +26,7 @@ namespace Infraestructure
                 if (string.IsNullOrEmpty(_jsonFileString) && _cfg == null)
                 {
                     if(_cfg == null)
-                        _jsonFileString = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"));
+                        _jsonFileString = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.Development.json"));
                     _instance = JsonSerializer.Deserialize<AppSettings>(_jsonFileString, new JsonSerializerOptions
                     {
                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,

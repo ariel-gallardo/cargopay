@@ -49,8 +49,6 @@ namespace Application
                     {
                         var (token,expTime) = _pwdServices.GenerateToken(cUser);
                         _httpContext.HttpContext.Response.Headers.Add("Authorization", token);
-                        result.Data = _mapper.Map<User,UserInfoDTO>(cUser);
-                        result.Data.ExpirationTime = expTime;
                         result.Message = Messages.Exists(Entities.User, user.UserEmail);
                         result.StatusCode = StatusCodes.Status200OK;
                     }

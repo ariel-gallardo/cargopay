@@ -2,9 +2,8 @@ using System.Reflection;
 using Application;
 using Data;
 using Infraestructure;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace Presentation
@@ -14,14 +13,17 @@ namespace Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var appSettings = new AppSettings(builder.Configuration);
             builder.Services
             .AddHttpContextAccessor()
             .AddCustomAutoMapper()
             .AddJwtAuthentication()
             .AddUnitOfWork()
             .AddCustomServices()
-            .AddSingleton<AppSettings>()
-            .AddDbContext<CargoPayContext>(o => o.UseSqlServer(AppSettings.Config.ConnectionStrings.MSSQL))
+            .AddSingleton(appSettings);
+
+            builder.Services.AddDbContext<CargoPayContext>(o => o.UseMySQL(appSettings.ConnectionStrings.MySQL))
+
             .AddPaymentFeeModule();
             builder.Services.AddControllers(o =>
             {
