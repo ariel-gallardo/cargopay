@@ -1,58 +1,70 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - cargopay-api
+name: Build and Deploy to Azure Web App
 
 on:
   push:
     branches:
-      - psql
-  workflow_dispatch:
+      - psql  # Cambia esto si usas otra rama principal
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
 
     steps:
-      - uses: actions/checkout@v4
+      # Paso 1: Checkout del código
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+      # Paso 2: Loguearse en Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
         with:
-          dotnet-version: '8.x'
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      # Paso 3: Iniciar sesión en Azure Container Registry (ACR)
+      - name: Log in to ACR
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/Presentation
+      # Paso 4: Construir la imagen Docker
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.ACR_NAME }}.azurecr.io/mi-app:latest .
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/Presentation
+      # Paso 5: Subir la imagen Docker a ACR
+      - name: Push image to ACR
+        run: |
+          docker push ${{ secrets.ACR_NAME }}.azurecr.io/mi-app:latest
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: .net-app
-      
+      # Paso 6: Desplegar la imagen a la Web App de Azure y configurar las variables de entorno
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'cargopay-api'
-          slot-name: 'Production'
-          package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DAFE73DD928C49E09BBCB24A1ABC4C1B }}
+        run: |
+          az webapp config container set \
+            --name ${{ secrets.WEBAPP_NAME }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --docker-custom-image-name ${{ secrets.ACR_NAME }}.azurecr.io/mi-app:latest \
+            --docker-registry-server-url https://$${{ secrets.ACR_NAME }}.azurecr.io
+
+          # Configurar las variables de entorno de la DB y otras configuraciones de la aplicación
+          az webapp config appsettings set \
+            --name ${{ secrets.WEBAPP_NAME }} \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
+            --settings \
+              DB_HOST=${{ secrets.DB_HOST }} \
+              DB_NAME=${{ secrets.DB_NAME }} \
+              DB_USER=${{ secrets.DB_USER }} \
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              AZURE_POSTGRESQL_CONNECTIONSTRING="Host=${{ secrets.DB_HOST }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }};Database=${{ secrets.DB_NAME }};Port=5432;Ssl Mode=Require" \
+              AppSettings__Take=10 \
+              AppSettings__PaymentFee__MinValue=0 \
+              AppSettings__PaymentFee__MaxValue=2 \
+              AppSettings__PaymentFee__SleepTime="5m" \
+              AppSettings__JWT__Issuer="" \
+              AppSettings__JWT__Audience="" \
+              AppSettings__JWT__SecretKey="2d89b64214def8ff6cff8c076646a4c1" \
+              AppSettings__JWT__ValidateIssuer=false \
+              AppSettings__JWT__ValidateAudience=false \
+              AppSettings__JWT__ValidateLifetime=true \
+              AppSettings__JWT__HourExpirationTime=1 \
+              AllowedHosts="*" \
+              Logging__LogLevel__Default="Information" \
+              Logging__LogLevel__Microsoft_AspNetCore="Warning"

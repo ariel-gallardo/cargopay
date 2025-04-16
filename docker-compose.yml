@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
       args:
         - CERT_PASSWORD_ARG=1234
-        - BUILD_CONFIGURATION=Debug
+        - BUILD_CONFIGURATION=Publish
     ports:
-      - "1000:443"
+      - "443:443"
     environment:
       AZURE_POSTGRESQL_CONNECTIONSTRING: "Host=cargopay.database;Username=cargopay-user;Password=cargopay-pass;Database=cargopay-db;Port=5432;"
       AppSettings__Take: 10
