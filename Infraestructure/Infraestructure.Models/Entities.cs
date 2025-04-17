@@ -2,8 +2,8 @@
 {
     public static class Entities
     {
-        public const string User = "USER";
+        public const string User = "User";
 
-        public const string Card = "CARD";
+        public const string Card = "Card";
     }
 }

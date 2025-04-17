@@ -40,12 +40,13 @@ namespace Infraestructure
                         invEmails.Add(e);
                 }
             }
-
+            
             if(invEmails.Count > 0) ErrorMessage = Messages.InvalidEmail(
                 Emails?.Length > 0 ? Emails : 
                 new string[]{!string.IsNullOrWhiteSpace(Email)
                 ? Email : "ANY"}
             );
+
 
             return invEmails.Count == 0;
         }

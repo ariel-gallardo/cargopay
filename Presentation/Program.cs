@@ -4,6 +4,7 @@ using Data;
 using Infraestructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Presentation
@@ -22,12 +23,29 @@ namespace Presentation
             .AddCustomServices()
             .AddSingleton(appSettings);
 
-            builder.Services.AddDbContext<CargoPayContext>(o => o.UseMySQL(appSettings.ConnectionStrings.MySQL))
+            builder.Services.AddDbContext<CargoPayContext>(o => o.UseMySQL(appSettings.ConnectionStrings.MySQL));
+
+            builder.Services.AddCors(o =>
+            {
+                o.AddPolicy("AngularApp",
+                policy =>
+                {
+                    policy.WithOrigins(appSettings.AngularUrl)
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            })
 
             .AddPaymentFeeModule();
             builder.Services.AddControllers(o =>
             {
                 o.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                o.Filters.Add<ValidationFilter>();
+                o.Filters.Add<Status500Filter>();
+            });
+            builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
             });
             builder.Services
             .AddEndpointsApiExplorer()
@@ -62,6 +80,7 @@ namespace Presentation
             });
 
             var app = builder.Build();
+            app.UseCors("AngularApp");
 
             if (app.Environment.IsDevelopment())
             {

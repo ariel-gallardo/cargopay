@@ -4,7 +4,7 @@ namespace Domain
 {
     public class UserLoginDTO
     {
-        [CustomEmailAddress]
+        [EmailAddress(ErrorMessage = "INVALID_EMAIL_FORMAT")]
         public string UserEmail { get; set; }
         [CustomRequired(ErrorMessageResourceType = typeof(string))]
         public string UserPassword { get; set; }

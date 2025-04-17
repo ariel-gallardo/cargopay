@@ -54,7 +54,7 @@ namespace Application
                     }
                     else
                     {
-                        result.Message = Messages.InvalidRequest(Entities.User, "PASSWORD");
+                        result.Message = Messages.InvalidRequest(Entities.User, ("UserPassword", "PASSWORD_INVALID"));
                         result.StatusCode = StatusCodes.Status400BadRequest;
                     }
                 }
