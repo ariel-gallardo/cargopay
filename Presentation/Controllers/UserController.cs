@@ -1,5 +1,6 @@
 ﻿using Application;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation
@@ -19,6 +20,13 @@ namespace Presentation
         {
             var info = await _services.LoginUser(dto);
             return StatusCode(info.StatusCode, info);
+        }
+
+        [HttpPost("loginWithToken")]
+        [Authorize]
+        public async Task<IActionResult> LoginWithToken()
+        {
+            return StatusCode(StatusCodes.Status200OK);
         }
 
         [HttpPost("register")]

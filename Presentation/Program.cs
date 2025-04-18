@@ -32,7 +32,8 @@ namespace Presentation
                 {
                     policy.WithOrigins(appSettings.AngularUrl)
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .WithExposedHeaders("Authorization");
                 });
             })
 

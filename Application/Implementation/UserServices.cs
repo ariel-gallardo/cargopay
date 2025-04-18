@@ -43,30 +43,22 @@ namespace Application
             if (await _repository.UserExists(user.UserEmail))
             {
                 var cUser = await _repository.Where(x => x.Email == user.UserEmail).FirstOrDefaultAsync();
-                if(cUser != null)
+                if(_pwdServices.Ok(user.UserPassword, cUser.Password))
                 {
-                    if(_pwdServices.Ok(user.UserPassword, cUser.Password))
-                    {
-                        var (token,expTime) = _pwdServices.GenerateToken(cUser);
-                        _httpContext.HttpContext.Response.Headers.Add("Authorization", token);
-                        result.Message = Messages.Exists(Entities.User, user.UserEmail);
-                        result.StatusCode = StatusCodes.Status200OK;
-                    }
-                    else
-                    {
-                        result.Message = Messages.InvalidRequest(Entities.User, ("UserPassword", "PASSWORD_INVALID"));
-                        result.StatusCode = StatusCodes.Status400BadRequest;
-                    }
+                    var (token,expTime) = _pwdServices.GenerateToken(cUser);
+                    _httpContext.HttpContext.Response.Headers.Add("Authorization", token);
+                    result.Message = Messages.Exists(Entities.User, user.UserEmail);
+                    result.StatusCode = StatusCodes.Status200OK;
                 }
                 else
                 {
-                    result.Message = Messages.NotExists(Entities.User, user.UserEmail);
+                    result.Message = Messages.InvalidRequest(Entities.User, ("UserPassword", "PASSWORD_INVALID"));
                     result.StatusCode = StatusCodes.Status400BadRequest;
                 }
             }
             else
             {
-                result.Message = Messages.InvalidRequest(Entities.User);
+                result.Message = Messages.NotExists(Entities.User, user.UserEmail);
                 result.StatusCode = StatusCodes.Status401Unauthorized;
             }
             return result;
