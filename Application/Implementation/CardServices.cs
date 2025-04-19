@@ -93,5 +93,23 @@ namespace Application
             }
             return result;
         }
+
+        public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take)
+        {
+            var result = new CustomResponse();
+            result.StatusCode = 200;
+            if (_userServices.CurrentUserId != null)
+            {
+                var data = await _repository
+                    .WhereAsPaginateWithTakeAsListAsync(x => x.UserId == _userServices.CurrentUserId.Value, x => x.CreatedAt, false, page, take);
+                result.Data = data;
+                result.Message = data.Quantity > 0 ? Messages.HasData(Entities.Card) : Messages.WithoutData(Entities.Card);
+            }
+            else
+            {
+                result.Message = Messages.WithoutData(Entities.Card);
+            }
+            return result;
+        }
     }
 }

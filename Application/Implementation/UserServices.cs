@@ -37,6 +37,16 @@ namespace Application
             }
         }
 
+        public long? CurrentUserId
+        {
+            get
+            {
+                if (CurrentUserClaims.Count() > 0)
+                    return long.Parse(CurrentUserClaims.First(x => ClaimTypes.Sid == x.Type).Value);
+                return null;
+            }
+        }
+
         public async Task<CustomResponse> LoginUser(UserLoginDTO user)
         {
             var result = new CustomResponse();
@@ -47,7 +57,7 @@ namespace Application
                 {
                     var (token,expTime) = _pwdServices.GenerateToken(cUser);
                     _httpContext.HttpContext.Response.Headers.Add("Authorization", token);
-                    result.Message = Messages.Exists(Entities.User, user.UserEmail);
+                    result.Message = Messages.Exists(Entities.User, cUser.Name);
                     result.StatusCode = StatusCodes.Status200OK;
                 }
                 else

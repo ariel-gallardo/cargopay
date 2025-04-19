@@ -39,5 +39,13 @@ namespace Presentation
             var info = await _services.Info(cardId);
             return StatusCode(info.StatusCode, info);
         }
+
+        [HttpGet("current-user")]
+        [Authorize]
+        public async Task<IActionResult> GetCardsForCurrentUser([FromQuery] int page, [FromQuery] int take)
+        {
+            var info = await _services.GetCardsForCurrentUser(page,take);
+            return StatusCode(info.StatusCode, info);
+        }
     }
 }

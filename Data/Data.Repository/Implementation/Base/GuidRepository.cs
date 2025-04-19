@@ -157,7 +157,7 @@ namespace Data
 
             if (page > 1)
             {
-                querie = querie.Skip(page * _appSettings.Take).Take(_appSettings.Take);
+                querie = querie.Skip((page - 1) * _appSettings.Take).Take(_appSettings.Take);
             }
             else
                 querie = querie.Take(_appSettings.Take);
@@ -170,7 +170,7 @@ namespace Data
             var querie = Where(whereExpression, ordenarPor, ascendente);
             var count = await querie.CountAsync();
             if (page > 1)
-                resultList.AddRange(await querie.Skip(page * _appSettings.Take).Take(_appSettings.Take).ToListAsync());
+                resultList.AddRange(await querie.Skip((page - 1) * _appSettings.Take).Take(_appSettings.Take).ToListAsync());
             else
                 resultList.AddRange(await querie.Take(_appSettings.Take).ToListAsync());
             return Pagination<T>.Crear(resultList, count, page);
@@ -194,6 +194,18 @@ namespace Data
         public void Detach(T entity)
         {
             _ctx.Entry(entity).State = EntityState.Detached;
+        }
+
+        public async Task<Pagination<T>> WhereAsPaginateWithTakeAsListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1, int take = 10)
+        {
+            var resultList = new List<T>();
+            var querie = Where(whereExpression, ordenarPor, ascendente);
+            var count = await querie.CountAsync();
+            if (page > 1)
+                resultList.AddRange(await querie.Skip((page - 1) * take).Take(take).ToListAsync());
+            else
+                resultList.AddRange(await querie.Take(take).ToListAsync());
+            return Pagination<T>.Crear(resultList, count, page);
         }
     }
 }

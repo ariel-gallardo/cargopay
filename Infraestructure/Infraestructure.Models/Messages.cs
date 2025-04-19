@@ -24,6 +24,12 @@
         public static string AlreadyExists(string entityType, string info)
         => $@"ALREADY_EXISTS |{{""{entityType}"":""{info}""}}";
 
+        public static string HasData(string entityType)
+        => $@"HAS_DATA |{{""{entityType}"":""true""}}";
+
+        public static string WithoutData(string entityType)
+        => $@"WITHOUT_DATA |{{""{entityType}"":""true""}}";
+
         public static string NotExists(string entityType, string info)
         => $@"NOT_EXISTS |{{""{entityType}"":""{info}""}}";
 

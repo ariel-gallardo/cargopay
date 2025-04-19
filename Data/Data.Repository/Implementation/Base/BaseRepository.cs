@@ -71,6 +71,8 @@ namespace Data
 
         public void Detach(T entity)
         => _repository.Detach(entity);
-        
+
+        public async Task<Pagination<T>> WhereAsPaginateWithTakeAsListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1, int take = 10)
+        => await _repository.WhereAsPaginateWithTakeAsListAsync(whereExpression, ordenarPor, ascendente, page, take);
     }
 }

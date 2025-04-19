@@ -11,5 +11,6 @@ namespace Application
         Task<CustomResponse> RegisterUser(UserRegisterDTO user);
         IEnumerable<Claim> CurrentUserClaims { get; }
         User CurrentUser { get; }
+        long? CurrentUserId { get; }
     }
 }
