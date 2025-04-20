@@ -11,6 +11,7 @@ namespace Application
 {
     public class CardServices : ICardServices
     {
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ICardRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUserServices _userServices;
@@ -18,6 +19,7 @@ namespace Application
 
         public CardServices(IUnitOfWork unitOfWork, IMapper mapper, IUserServices userServices, IPaymentFeesServices pFServices)
         {
+            _unitOfWork = unitOfWork;
             _repository = unitOfWork.Card;
             _mapper = mapper;
             _userServices = userServices;
@@ -98,13 +100,11 @@ namespace Application
         public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take,string orderBy)
         {
             var result = new CustomResponse();
-            var cardOrder = orderBy.OrderByExpressionMaker<Card>();
 
             result.StatusCode = 200;
             if (_userServices.CurrentUserId != null)
             {
-                var data = await _repository
-                    .WhereAsPaginateWithTakeOrderByAsListAsync(x => x.UserId == _userServices.CurrentUserId.Value,page,take, cardOrder);
+                var data = await _repository.CardsByUser(_userServices.CurrentUserId.Value, page,take, orderBy);
                 result.Data = data;
                 result.Message = data.Quantity > 0 ? Messages.HasData(Entities.Card) : Messages.WithoutData(Entities.Card);
             }

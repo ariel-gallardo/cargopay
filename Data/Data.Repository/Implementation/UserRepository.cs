@@ -19,7 +19,7 @@ namespace Data
         {
             if(!await UserExists(user.Email))
             {
-                if(await Insert(user) > 0) return await Where(x => x.Email == user.Email).FirstAsync();
+                if(await Insert(user) > 0) return user;
             }
             return null;
         }

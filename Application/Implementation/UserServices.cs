@@ -31,7 +31,7 @@ namespace Application
                 if(CurrentUserClaims.Count() > 0)
                 {
                     var cId = long.Parse(CurrentUserClaims.First(x => ClaimTypes.Sid == x.Type).Value);
-                    result = _unitOfWork.User.Where(x => x.Id == cId).Include(x => x.Cards).First();
+                    result = _unitOfWork.User.Where(x => x.Id == cId).First();
                 }
                 return result;
             }

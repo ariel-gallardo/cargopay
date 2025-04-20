@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Domain.DTOs\Domain.DTOs.csproj" />
     <ProjectReference Include="..\..\Domain\Domain.Entities\Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Domain.Pagination\Domain.Pagination.csproj" />
     <ProjectReference Include="..\Data.Context\Data.Context.csproj" />

@@ -10,7 +10,7 @@ namespace Domain
         public int? NextPage { get; set; }
         public int Total { get; set; }
         public int TotalPages { get; set; }
-        public dynamic Content { get; set; }
+        public IList<T> Content { get; set; }
 
         public Pagination(IEnumerable<T> data, int total, int page)
         {
@@ -22,7 +22,7 @@ namespace Domain
                 TotalPages = (int)Math.Ceiling((double)total / AppSettings.Config.Take);
                 PreviousPage = Page > 1 ? Page - 1 : null;
                 NextPage = Page < TotalPages ? Page + 1 : null;
-                Content = data;
+                Content = data.ToList();
             }
         }
 

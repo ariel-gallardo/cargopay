@@ -22,7 +22,9 @@ namespace Application
             CreateMap<Card, CardInfoDTO>()
                 .ForMember(x => x.CardId, xx => xx.MapFrom(y => y.Id))
                 .ForMember(x => x.UserId, xx => xx.MapFrom(y => y.UserId))
-                .ForMember(x => x.Balance, xx => xx.MapFrom(y => y.Balance));
+                .ForMember(x => x.Balance, xx => xx.MapFrom(y => y.Balance))
+                .ForMember(x => x.CreatedAt, xx => xx.MapFrom(y => y.CreatedAt))
+                .ForMember(x => x.Client, xx => xx.MapFrom(y => y.User.Name));
 
             CreateMap<Card, Card>()
                 .ForMember(x => x.UserId, xx => xx.MapFrom((src, dest) => dest.UserId != src.UserId && src.UserId > 0 ? src.UserId : dest.UserId))

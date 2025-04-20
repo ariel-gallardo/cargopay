@@ -1,11 +1,23 @@
-﻿using Domain;
+﻿using AutoMapper;
+using Domain;
+using Infraestructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
     public class CardRepository : BaseRepository<Card>, ICardRepository
     {
-        public CardRepository(IRepository<Card> repository) : base(repository)
+        private readonly IMapper _mapper;
+
+        public CardRepository(IRepository<Card> repository, IMapper mapper) : base(repository)
         {
+            _mapper = mapper;
         }
+
+        public async Task<Pagination<CardInfoDTO>> CardsByUser(long userId, int page, int take, string orderBy)
+        => await Where(x => x.UserId == userId)
+            .Include(x => x.User)
+            .OrderBy(orderBy.OrderByExpressionMaker<Card>())
+            .AsPaginate<Card,CardInfoDTO>(_mapper,page, take);
     }
 }

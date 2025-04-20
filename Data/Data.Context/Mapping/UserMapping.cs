@@ -17,7 +17,7 @@ namespace Data
 
         public static void MapRelationShips<T>(this ModelBuilder modelBuilder) where T : User
         {
-            modelBuilder.Entity<T>().HasMany(x => x.Cards).WithOne().HasForeignKey(x => x.UserId);
+            modelBuilder.Entity<User>().HasMany(x => x.Cards).WithOne(x => x.User).HasForeignKey(x => x.UserId);
         }
     }
 }
