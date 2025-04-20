@@ -16,6 +16,8 @@ namespace Data.Context.Migrations
                     IF NEW.id IS NULL THEN
                         SET NEW.id = LPAD(CAST(FLOOR(RAND() * 1000000000000000) AS CHAR), 15, '0');
                     END IF;
+                    SET @last_id = NEW.id;
+                    SELECT @last_id;    
                 END;
         ");
         }

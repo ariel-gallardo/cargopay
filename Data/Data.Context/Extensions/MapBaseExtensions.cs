@@ -7,7 +7,7 @@ namespace Data
     {
         internal static ModelBuilder MapBaseString<T>(this ModelBuilder modelBuilder) where T : StringEntity
         {
-            modelBuilder.Entity<T>().HasKey(x => x.Id);
+            modelBuilder.Entity<T>().HasIndex(x => x.Id).IsUnique();
             modelBuilder.Entity<T>().Property(x => x.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
             modelBuilder.Entity<T>().Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired(false);
             modelBuilder.Entity<T>().Property(x => x.DeletedAt).HasColumnName("deleted_at").IsRequired(false);
