@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
-    public class BigIntEntity
+    public abstract class BigIntEntity : IEntity<long>
     {
         [Column("id")]
         [Key]

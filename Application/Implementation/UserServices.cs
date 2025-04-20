@@ -10,14 +10,14 @@ namespace Application
 {
     public class UserServices : IUserServices
     {
-        private readonly IUserRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordServices _pwdServices;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContext;
 
-        public UserServices(IUserRepository repository, IPasswordServices pwdServices, IMapper mapper, IHttpContextAccessor httpContext)
+        public UserServices(IUnitOfWork unitOfWork, IPasswordServices pwdServices, IMapper mapper, IHttpContextAccessor httpContext)
         {
-            _repository = repository;
+            _unitOfWork = unitOfWork;
             _pwdServices = pwdServices;
             _mapper = mapper;
             _httpContext = httpContext;
@@ -31,7 +31,7 @@ namespace Application
                 if(CurrentUserClaims.Count() > 0)
                 {
                     var cId = long.Parse(CurrentUserClaims.First(x => ClaimTypes.Sid == x.Type).Value);
-                    result = _repository.Where(x => x.Id == cId).Include(x => x.Cards).First();
+                    result = _unitOfWork.User.Where(x => x.Id == cId).Include(x => x.Cards).First();
                 }
                 return result;
             }
@@ -50,9 +50,9 @@ namespace Application
         public async Task<CustomResponse> LoginUser(UserLoginDTO user)
         {
             var result = new CustomResponse();
-            if (await _repository.UserExists(user.UserEmail))
+            if (await _unitOfWork.User.UserExists(user.UserEmail))
             {
-                var cUser = await _repository.Where(x => x.Email == user.UserEmail).FirstOrDefaultAsync();
+                var cUser = await _unitOfWork.User.Where(x => x.Email == user.UserEmail).FirstOrDefaultAsync();
                 if(_pwdServices.Ok(user.UserPassword, cUser.Password))
                 {
                     var (token,expTime) = _pwdServices.GenerateToken(cUser);
@@ -77,11 +77,11 @@ namespace Application
         public async Task<CustomResponse> RegisterUser(UserRegisterDTO user)
         {
             var result = new CustomResponse();
-            if (!await _repository.UserExists(user.UserEmail))
+            if (!await _unitOfWork.User.UserExists(user.UserEmail))
             {
                 user.UserPassword = _pwdServices.Encrypt(user.UserPassword);
                 var newUser = _mapper.Map<UserRegisterDTO, User>(user);
-                newUser = await _repository.CreateUser(newUser);
+                newUser = await _unitOfWork.User.CreateUser(newUser);
                 if (newUser != null) {
                     result.Message = Messages.Created(Entities.User, user.UserEmail);
                     result.StatusCode = StatusCodes.Status200OK;

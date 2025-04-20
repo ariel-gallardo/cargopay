@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
-    public class StringEntity
+    public abstract class StringEntity
     {
         [Column("id")]
         [Key]

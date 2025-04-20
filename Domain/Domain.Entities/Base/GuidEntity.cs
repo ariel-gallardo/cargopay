@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
-    public class GuidEntity
+    public abstract class GuidEntity : IEntity<string>
     {
         private string _id = string.Empty;
 

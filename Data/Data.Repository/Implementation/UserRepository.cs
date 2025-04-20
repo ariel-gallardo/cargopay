@@ -5,7 +5,7 @@ namespace Data
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(IRepository<User> repository) : base(repository)
+        public UserRepository(IRepository<User> repository) : base(repository) 
         {
         }
 

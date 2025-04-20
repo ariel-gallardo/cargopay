@@ -8,8 +8,8 @@ namespace Data
         public static IServiceCollection AddUnitOfWork(this IServiceCollection s)
         {
             #region User
-            s.AddScoped<IRepository<User>, BigIntRepository<User>>();
-            s.AddScoped<IRepository<Card>, StringRepository<Card>>();
+            s.AddScoped<IRepository<User>, Repository<User>>();
+            s.AddScoped<IRepository<Card>, Repository<Card>>();
             s.AddScoped<IUserRepository, UserRepository>();
             s.AddScoped<ICardRepository, CardRepository>();
             #endregion
