@@ -17,12 +17,15 @@ namespace Data
         Task<int> Delete(IEnumerable<T> entity);
         public bool Exists(dynamic id);
         IQueryable<T> Where(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> orderByExpression = null, bool ascending = false);
+        IQueryable<T> WhereOrderByExpressions(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>, bool)[] orderByExpressions);
         IQueryable<T> WhereSoftDeleted(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> orderByExpression = null, bool ascending = false);
+        IQueryable<T> WhereOrderByExpressionsSoftDeleted(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>, bool)[] orderByExpressions);
         bool ExistsSoftDeleted(dynamic id);
         Task<bool> Restore(dynamic id);
         (int,IQueryable<T>) WhereAsPaginateQuerie(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1);
         Task<Pagination<T>> WhereAsPaginateListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1);
         Task<Pagination<T>> WhereAsPaginateWithTakeAsListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1, int take = 10);
+        Task<Pagination<T>> WhereAsPaginateWithTakeOrderByAsListAsync(Expression<Func<T, bool>> whereExpression, int page, int take, params (Expression<Func<T, object>> ordenarPor, bool)[] orderByExpressions);
         IUnitOfWork UnitOfWork { get; set; }
         void Detach(T entity);
     }

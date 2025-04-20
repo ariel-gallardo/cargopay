@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq.Expressions;
+using System.Security.Claims;
 using AutoMapper;
 using Data;
 using Domain;
@@ -94,14 +95,16 @@ namespace Application
             return result;
         }
 
-        public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take)
+        public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take,string orderBy)
         {
             var result = new CustomResponse();
+            var cardOrder = orderBy.OrderByExpressionMaker<Card>();
+
             result.StatusCode = 200;
             if (_userServices.CurrentUserId != null)
             {
                 var data = await _repository
-                    .WhereAsPaginateWithTakeAsListAsync(x => x.UserId == _userServices.CurrentUserId.Value, x => x.CreatedAt, false, page, take);
+                    .WhereAsPaginateWithTakeOrderByAsListAsync(x => x.UserId == _userServices.CurrentUserId.Value,page,take, cardOrder);
                 result.Data = data;
                 result.Message = data.Quantity > 0 ? Messages.HasData(Entities.Card) : Messages.WithoutData(Entities.Card);
             }

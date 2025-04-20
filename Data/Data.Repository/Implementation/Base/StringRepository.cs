@@ -52,6 +52,24 @@ namespace Data
             return expression;
         }
 
+        public IQueryable<T> WhereOrderByExpressions(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>,bool)[] orderByExpressions)
+        {
+            var expression = _ctx.Set<T>().Where(whereExpression);
+
+            for (var i = 0; i < orderByExpressions.Length; i++)
+            {
+                var (exp, asc) = orderByExpressions[i];
+                if (i == 0)
+                    expression = asc ? expression.OrderBy(exp) : expression.OrderByDescending(exp);
+                else
+                    expression = asc ? (expression as IOrderedQueryable<T>).ThenBy(exp) : (expression as IOrderedQueryable<T>).ThenByDescending(exp);
+            }
+            return expression;
+        }
+
+        public IQueryable<T> WhereOrderByExpressionsSoftDeleted(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>, bool)[] orderByExpressions)
+        => WhereOrderByExpressions(whereExpression, orderByExpressions).IgnoreQueryFilters();
+
         public async Task<int> Insert(T entity)
         {
             await _ctx.AddAsync(entity);
@@ -204,6 +222,18 @@ namespace Data
             var count = await querie.CountAsync();
             if (page > 1)
                 resultList.AddRange(await querie.Skip((page-1) * take).Take(take).ToListAsync());
+            else
+                resultList.AddRange(await querie.Take(take).ToListAsync());
+            return Pagination<T>.Crear(resultList, count, page);
+        }
+
+        public async Task<Pagination<T>> WhereAsPaginateWithTakeOrderByAsListAsync(Expression<Func<T, bool>> whereExpression, int page, int take, params (Expression<Func<T, object>> ordenarPor, bool)[] orderByExpressions)
+        {
+            var resultList = new List<T>();
+            var querie = WhereOrderByExpressions(whereExpression, orderByExpressions);
+            var count = await querie.CountAsync();
+            if (page > 1)
+                resultList.AddRange(await querie.Skip((page - 1) * take).Take(take).ToListAsync());
             else
                 resultList.AddRange(await querie.Take(take).ToListAsync());
             return Pagination<T>.Crear(resultList, count, page);

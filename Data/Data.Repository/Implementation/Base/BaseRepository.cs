@@ -74,5 +74,14 @@ namespace Data
 
         public async Task<Pagination<T>> WhereAsPaginateWithTakeAsListAsync(Expression<Func<T, bool>> whereExpression, Expression<Func<T, object>> ordenarPor = null, bool ascendente = true, int page = 1, int take = 10)
         => await _repository.WhereAsPaginateWithTakeAsListAsync(whereExpression, ordenarPor, ascendente, page, take);
+
+        public IQueryable<T> WhereOrderByExpressions(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>, bool)[] orderByExpressions)
+        => _repository.WhereOrderByExpressions(whereExpression, orderByExpressions);
+
+        public IQueryable<T> WhereOrderByExpressionsSoftDeleted(Expression<Func<T, bool>> whereExpression, params (Expression<Func<T, object>>, bool)[] orderByExpressions)
+        => _repository.WhereOrderByExpressionsSoftDeleted(whereExpression, orderByExpressions);
+
+        public Task<Pagination<T>> WhereAsPaginateWithTakeOrderByAsListAsync(Expression<Func<T, bool>> whereExpression, int page, int take, params (Expression<Func<T, object>> ordenarPor, bool)[] orderByExpressions)
+        => _repository.WhereAsPaginateWithTakeOrderByAsListAsync(whereExpression, page, take, orderByExpressions);
     }
 }
