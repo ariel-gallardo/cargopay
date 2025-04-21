@@ -1,10 +1,8 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Domain;
+using Infraestructure;
 using Microsoft.EntityFrameworkCore;
-using Mysqlx.Crud;
-using Org.BouncyCastle.Asn1.X509;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace Data
 {
     public static class RepositoryExtensions
@@ -49,6 +47,56 @@ namespace Data
             else
                 resultList.AddRange(await querie.Take(take).Select(x => mapper.Map<Output>(x)).ToListAsync());
             return Pagination<T>.Crear(resultList, count, page);
+        }
+
+        public static IQueryable<T> AddSearchByFilters<T>(this IQueryable<T> querie, string searchByFilters)
+        {
+            var exps = searchByFilters.SearchByExpressionMaker<T>();
+
+            if (exps == null || exps.Length == 0)
+                return querie;
+
+            var combined = exps[0];
+            for (int i = 1; i < exps.Length; i++)
+            {
+                combined = CombineWithAnd(combined, exps[i]);
+            }
+
+            return querie.Where(combined);
+        }
+
+        private static Expression<Func<T, bool>> CombineWithAnd<T>(
+            Expression<Func<T, bool>> expr1,
+            Expression<Func<T, bool>> expr2)
+        {
+            var parameter = Expression.Parameter(typeof(T), "x");
+
+            var leftVisitor = new ReplaceParameterVisitor(expr1.Parameters[0], parameter);
+            var left = leftVisitor.Visit(expr1.Body);
+
+            var rightVisitor = new ReplaceParameterVisitor(expr2.Parameters[0], parameter);
+            var right = rightVisitor.Visit(expr2.Body);
+
+            var body = Expression.AndAlso(left!, right!);
+
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
+        }
+
+        class ReplaceParameterVisitor : ExpressionVisitor
+        {
+            private readonly ParameterExpression _oldParam;
+            private readonly ParameterExpression _newParam;
+
+            public ReplaceParameterVisitor(ParameterExpression oldParam, ParameterExpression newParam)
+            {
+                _oldParam = oldParam;
+                _newParam = newParam;
+            }
+
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                return node == _oldParam ? _newParam : base.VisitParameter(node);
+            }
         }
     }
 }

@@ -97,14 +97,14 @@ namespace Application
             return result;
         }
 
-        public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take,string orderBy)
+        public async Task<CustomResponse> GetCardsForCurrentUser(int page, int take,string orderBy, string searchBy)
         {
             var result = new CustomResponse();
 
             result.StatusCode = 200;
             if (_userServices.CurrentUserId != null)
             {
-                var data = await _repository.CardsByUser(_userServices.CurrentUserId.Value, page,take, orderBy);
+                var data = await _repository.CardsByUser(_userServices.CurrentUserId.Value, page,take, orderBy, searchBy);
                 result.Data = data;
                 result.Message = data.Quantity > 0 ? Messages.HasData(Entities.Card) : Messages.WithoutData(Entities.Card);
             }

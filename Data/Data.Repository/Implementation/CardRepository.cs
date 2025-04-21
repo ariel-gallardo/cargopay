@@ -14,9 +14,10 @@ namespace Data
             _mapper = mapper;
         }
 
-        public async Task<Pagination<CardInfoDTO>> CardsByUser(long userId, int page, int take, string orderBy)
+        public async Task<Pagination<CardInfoDTO>> CardsByUser(long userId, int page, int take, string orderBy, string searchBy)
         => await Where(x => x.UserId == userId)
             .Include(x => x.User)
+            .AddSearchByFilters(searchBy)
             .OrderBy(orderBy.OrderByExpressionMaker<Card>())
             .AsPaginate<Card,CardInfoDTO>(_mapper,page, take);
     }

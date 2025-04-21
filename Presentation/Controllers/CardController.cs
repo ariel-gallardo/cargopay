@@ -42,9 +42,9 @@ namespace Presentation
 
         [HttpGet("current-user")]
         [Authorize]
-        public async Task<IActionResult> GetCardsForCurrentUser([FromQuery] int page, [FromQuery] int take, [FromQuery] string orderBy = null)
+        public async Task<IActionResult> GetCardsForCurrentUser([FromQuery] int page, [FromQuery] int take, [FromQuery] string orderBy = null, [FromQuery] string searchBy = null)
         {
-            var info = await _services.GetCardsForCurrentUser(page,take,orderBy);
+            var info = await _services.GetCardsForCurrentUser(page,take,orderBy,searchBy);
             return StatusCode(info.StatusCode, info);
         }
     }
